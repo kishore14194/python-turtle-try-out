@@ -1,5 +1,6 @@
 import turtle
 import random
+import math
 
 wn = turtle.Screen()
 wn.bgcolor("#E80E0E")
@@ -62,6 +63,10 @@ class Goal(turtle.Turtle):
         self.goto(random.randint(-250, 250), random.randint(-250, 250))
         self.setheading(random.randint(0,360))
 
+    def jump(self):
+        self.goto(random.randint(-250, 250), random.randint(-250, 250))
+        self.setheading(random.randint(0, 360))
+
     def move(self):
         self.forward(self.speed)
         if self.xcor() > 290 or self.xcor() < -290:
@@ -70,9 +75,23 @@ class Goal(turtle.Turtle):
             self.left(60)
 
 
+def isCollision(t1,t2):
+    a = t1.xcor()-t2.xcor()
+    b = t1.ycor()-t2.ycor()
+    distance = math.sqrt((a ** 2) + (b ** 2)) #pythagorean theorem to measure distance
+
+    if distance < 20:
+        return True
+    else:
+        return False
+
 player = Player()
 border = Border()
-goal = Goal()
+
+goals = []
+
+for i in range(6):
+    goals.append(Goal())
 
 border.draw_border()
 
@@ -81,6 +100,14 @@ wn.onkey(player.turn_left, "Left")
 wn.onkey(player.turn_right, "Right")
 wn.onkey(player.increase_speed, "Up")
 
+wn.tracer(0)
+
 while True:
+    wn.update()
     player.move()
-    goal.move()
+
+    for goal in goals:
+        goal.move()
+
+        if isCollision(player, goal):
+            goal.jump()
