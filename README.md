@@ -1,1 +1,1 @@
-# python-turtle-try-out
+# A Simple game using python turtle
