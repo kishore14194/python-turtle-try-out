@@ -1,10 +1,13 @@
 import turtle
 import random
 import math
+import os
 
 wn = turtle.Screen()
-wn.bgcolor("#E80E0E")
+wn.bgcolor("#000000")
 wn.title("Turtle graphics game")
+wn.bgpic("stars.gif")
+# wn.register_shape("star_us.gif")
 
 
 class Game(turtle.Turtle):
@@ -25,6 +28,11 @@ class Game(turtle.Turtle):
     def change_score(self, points):
         self.score += points
         self.update_score()
+
+    def play_sound(self,filename):
+        os.system("afplay {}&".format(filename))
+        # os.system("aplay {}&".format(filename)) # for linux
+
 
 class Border(turtle.Turtle):
 
@@ -71,16 +79,17 @@ class Player(turtle.Turtle):
     def increase_speed(self):
         self.speed += 1
 
+
 class Goal(turtle.Turtle):
 
     def __init__(self):
         turtle.Turtle.__init__(self)
         self.penup()
         self.shape("circle")
-        self.color("black")
+        self.color("#EA0909")
         self.speed = 3
         self.goto(random.randint(-250, 250), random.randint(-250, 250))
-        self.setheading(random.randint(0,360))
+        self.setheading(random.randint(0, 360))
 
     def jump(self):
         self.goto(random.randint(-250, 250), random.randint(-250, 250))
@@ -94,15 +103,16 @@ class Goal(turtle.Turtle):
             self.left(60)
 
 
-def isCollision(t1,t2):
-    a = t1.xcor()-t2.xcor()
-    b = t1.ycor()-t2.ycor()
-    distance = math.sqrt((a ** 2) + (b ** 2)) #pythagorean theorem to measure distance
+def is_collision(t1, t2):
+    a = t1.xcor() - t2.xcor()
+    b = t1.ycor() - t2.ycor()
+    distance = math.sqrt((a ** 2) + (b ** 2))  # pythagorean theorem to measure distance
 
     if distance < 20:
         return True
     else:
         return False
+
 
 player = Player()
 border = Border()
@@ -129,6 +139,7 @@ while True:
     for goal in goals:
         goal.move()
 
-        if isCollision(player, goal):
+        if is_collision(player, goal):
             goal.jump()
             game.change_score(10)
+            game.play_sound("collision.mp3")
