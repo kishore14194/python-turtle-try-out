@@ -7,6 +7,25 @@ wn.bgcolor("#E80E0E")
 wn.title("Turtle graphics game")
 
 
+class Game(turtle.Turtle):
+
+    def __init__(self):
+        turtle.Turtle.__init__(self)
+        self.penup()
+        self.hideturtle()
+        self.speed(0)
+        self.color("white")
+        self.goto(-290, 310)
+        self.score = 0
+
+    def update_score(self):
+        self.clear()
+        self.write("Your Score: {}".format(self.score), False, align="left", font=("Arial", 14, "normal"))
+
+    def change_score(self, points):
+        self.score += points
+        self.update_score()
+
 class Border(turtle.Turtle):
 
     def __init__(self):
@@ -87,6 +106,7 @@ def isCollision(t1,t2):
 
 player = Player()
 border = Border()
+game = Game()
 
 goals = []
 
@@ -111,3 +131,4 @@ while True:
 
         if isCollision(player, goal):
             goal.jump()
+            game.change_score(10)
